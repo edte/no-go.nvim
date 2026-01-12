@@ -6,10 +6,9 @@ M.error_query = [[
     condition: (binary_expression
       left: (identifier) @err_identifier)
     consequence: (block
-      (statement_list
         (return_statement
           (expression_list
-            (identifier) @return_identifier)?)))) @collapse_block) @if_statement
+            (identifier) @return_identifier)?))) @collapse_block) @if_statement
 ]]
 
 M.import_query = [[
