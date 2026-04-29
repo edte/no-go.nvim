@@ -189,13 +189,21 @@ function M.process_buffer(bufnr, config)
 		return
 	end
 
+	-- Skip if buffer is displayed in a codediff diff window
+	local wins = vim.fn.win_findbuf(bufnr)
+	for _, win in ipairs(wins) do
+		if vim.w[win].codediff_restore then
+			return
+		end
+	end
+
 	M.clear_extmarks(bufnr)
 
 	-- set conceallevel at the window level so concealing works
-	vim.api.nvim_buf_call(bufnr, function()
-		vim.wo.conceallevel = 2
-		vim.wo.concealcursor = "nvic" -- conceal in all modes
-	end)
+	for _, win in ipairs(wins) do
+		vim.api.nvim_win_set_option(win, "conceallevel", 2)
+		vim.api.nvim_win_set_option(win, "concealcursor", "nvic")
+	end
 
 	local error_query = M.get_error_query()
 	if not error_query then
